@@ -1,0 +1,38 @@
+description: 'Getting started'
+# Optionally set API keys here instead of exporting environment variables.
+# env:
+#   OPENAI_API_KEY: sk-...
+prompts:
+  - 'Convert the following English text to {{language}}: {{input}}'
+
+providers:  
+    - groq:llama-3.1-8b-instant
+    #  - llama-3.1-8b-instant
+# providers:
+#   - id: groq:llama-3.1-8b-instant
+#     label: "Groq"
+#     config:
+#       apiKey: ${GROQ_API_KEY}
+
+#   - id: google:gemini-2.5-flash
+#     label: "Google Gemini"
+
+#   - id: huggingface:text-generation:gemma-7b-it
+#     label: "HuggingFace"
+
+#   - id: ollama:completion:llama3.2
+#     label: "Ollama"
+
+tests:
+  - vars:
+      language: French
+      input: Hello world
+    assert:
+      - type: contains
+        value: 'Bonjour le monde'
+  - vars:
+      language: Spanish
+      input: Where is the library?
+    assert:
+      - type: icontains
+        value: 'Dónde está la biblioteca'
