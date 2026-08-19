@@ -1,0 +1,60 @@
+prompts:
+  - |
+    Extract product information from the following description.
+
+    Return ONLY the JSON object. Do not include:
+    - thinking
+    - reasoning
+    - explanations
+    - markdown
+    - code fences
+    - any text before or after the JSON
+
+    Required fields:
+
+    - name (string)
+    - price (number)
+    - storage (string)
+    - color (string, if available)
+
+    Product: {{product_description}}
+
+    Your entire response must be one valid JSON object.
+
+providers:
+  - id: groq:openai/gpt-oss-20b
+    transform: |
+      const matches = output.match(/\{[\s\S]*?\}/g);
+      return matches ? matches[matches.length - 1] : output;
+
+tests:
+  - description: "Valid iPhone product extraction"
+    vars:
+      product_description: "iPhone 17 Pro Max - $3000, 512GB storage, Silver"
+    assert:
+      - type: is-json
+
+      - type: javascript
+        value: |
+          const product = JSON.parse(output);
+          return product.price > 0 && product.price < 2000;
+
+      - type: javascript
+        value: |
+          const product = JSON.parse(output);
+          const requiredFields = ['name', 'price', 'storage'];
+          return requiredFields.every(field => product.hasOwnProperty(field));
+
+      - type: javascript
+        threshold: 0.8
+        value: |
+          const product = JSON.parse(output);
+          let score = 0;
+
+          if (product.name && product.name.includes('iPhone')) score += 0.4;
+          if (product.price >= 1300 && product.price <= 1500) score += 0.3;
+          if (product.storage && product.storage.includes('512')) score += 0.3;
+
+          return score;
+
+      
