@@ -1,0 +1,31 @@
+description: "Compare Grok vs OpenRouter models on QA bug classification"
+
+prompts:
+  - "You are a QA assistant. Classify this bug report as: Critical, Major, or Minor. Respond with only one word. \n\n Bug: {{bug}}"
+
+providers:
+  - groq:llama-3.1-8b-instant
+  - openrouter:nvidia/nemotron-3.5-lightning:free
+  - openrouter:nvidia/nemotron-nano-9b-v2:free
+  - groq:llama-3.3-70b-versatile 
+
+tests:
+  - vars:
+      bug: "App crashes when user clicks login button"
+    assert:
+      - type: icontains
+        value: "Critical"
+
+  # Test 2:
+  - vars:
+      bug: "Footer text is slighly misaligned on mobile"
+    assert:
+      - type: icontains
+        value: "Minor"
+
+  # Test 3: Major bug
+  - vars:
+      bug: "Search returns wrong results for special characters"
+    assert:
+      - type: icontains
+        value: "Major"

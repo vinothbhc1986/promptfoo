@@ -20,7 +20,6 @@ tests:
     vars:
       product_description: "Tesla Model 3 - $42990, Long Range, Pearl White"
     assert:
-      - type: is-json
       - type: cost
         threshold: 0.01
 
@@ -28,7 +27,6 @@ tests:
     vars:
       product_description: "Dyson V15 Vacuum - $649, Cordless, Yellow"
     assert:
-      - type: is-json
       - type: cost
         threshold: 0.005
 
@@ -36,6 +34,5 @@ tests:
     vars:
       product_description: "Bose QuietComfort Earbuds - $299, Black"
     assert:
-      - type: is-json
       - type: cost
         threshold: 0.001

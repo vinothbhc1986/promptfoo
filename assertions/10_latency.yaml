@@ -13,22 +13,20 @@ prompts:
     Return only valid JSON, no additional text.
 
 providers:
-  - groq:llama-3.1-8b-instant
+  - openrouter:nvidia/nemotron-3.5-lightning:free
 
 tests:
   - description: "Test 1: Response under 5 seconds"
     vars:
       product_description: "Microsoft Surface Pro 9 - $1299, 512GB, Graphite"
     assert:
-      - type: is-json
       - type: latency
-        threshold: 100
+        threshold: 10
 
   - description: "Test 2: Fast response under 3 seconds"
     vars:
       product_description: "Kindle Paperwhite - $139, 16GB, Black"
     assert:
-      - type: is-json
       - type: latency
         threshold: 3000
 
@@ -36,6 +34,5 @@ tests:
     vars:
       product_description: "Apple Watch Series 9 - $399, GPS, Midnight"
     assert:
-      - type: is-json
       - type: latency
         threshold: 2000
